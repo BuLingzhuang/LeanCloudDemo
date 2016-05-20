@@ -5,11 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
+import com.blz.leanclouddemo.utils.Tools;
 import com.roger.gifloadinglibrary.GifLoadingView;
 
 import butterknife.Bind;
@@ -28,7 +28,6 @@ public class AddActivity extends AppCompatActivity {
     EditText mEtDuration;
     @Bind(R.id.add_btnSubmit)
     Button mBtnSubmit;
-    private GifLoadingView mGifLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +47,15 @@ public class AddActivity extends AppCompatActivity {
         String duration = mEtDuration.getText().toString();
         String type = mEtType.getText().toString();
         if (TextUtils.isEmpty(musicName)) {
-            Toast.makeText(this, "歌曲名不能为空", Toast.LENGTH_SHORT).show();
+            Tools.showToast(AddActivity.this, "歌曲名不能为空");
         } else if (TextUtils.isEmpty(author)) {
-            Toast.makeText(this, "歌手名不能为空", Toast.LENGTH_SHORT).show();
+            Tools.showToast(AddActivity.this, "歌手名不能为空");
         } else if (TextUtils.isEmpty(duration)) {
-            Toast.makeText(this, "时长不能为空", Toast.LENGTH_SHORT).show();
+            Tools.showToast(AddActivity.this, "时长不能为空");
         } else if (TextUtils.isEmpty(type)) {
-            Toast.makeText(this, "类型不能为空", Toast.LENGTH_SHORT).show();
+            Tools.showToast(AddActivity.this, "类型不能为空");
         } else {
-            isShowDialog(true);
+            Tools.isShowDialog(true, getFragmentManager());
             AVObject blzObject = new AVObject("MusicEntity");
             blzObject.put("musicName", musicName);
             blzObject.put("author", author);
@@ -66,28 +65,15 @@ public class AddActivity extends AppCompatActivity {
                 @Override
                 public void done(AVException e) {
                     if (e == null) {
-                        Toast.makeText(AddActivity.this, "提交成功", Toast.LENGTH_SHORT).show();
+                        Tools.showToast(AddActivity.this, "提交成功");
                     } else {
-                        Toast.makeText(AddActivity.this, String.valueOf(e.getCode()), Toast.LENGTH_SHORT).show();
+                        Tools.showToast(AddActivity.this, "提交失败");
                     }
-                    isShowDialog(false);
+                    Tools.isShowDialog(false, getFragmentManager());
                 }
             });
         }
     }
 
-    private void isShowDialog(boolean flag) {
-        if (flag) {
-            if (mGifLoadingView == null) {
-                mGifLoadingView = new GifLoadingView();
-                mGifLoadingView.setImageResource(R.drawable.num15);
-                mGifLoadingView.show(getFragmentManager(),"");
-            } else {
-                mGifLoadingView.show(getFragmentManager(),"");
-            }
-        } else {
-            mGifLoadingView.dismiss();
-        }
-    }
 
 }
